@@ -83,8 +83,7 @@ module Agents
 
     def fetch
       
-      data = File.open(interpolated['filepath']).read
-      data_json =  CSV.parse(data, headers: true).to_json
+      data_json = CSV.open(interpolated['filepath'], :headers => true).map { |x| x.to_h }.to_json
       payload = JSON.parse(data_json)
 
       if interpolated['debug'] == 'true'
@@ -95,33 +94,28 @@ module Agents
         if payload.to_s != memory['last_status']
           if "#{memory['last_status']}" == ''
             payload.each do |social_networks|
-                create_event :payload => { 'username' => "#{social_networks[0]}", 'name' => "#{social_networks[1]}", 'url_main' => "#{social_networks[2]}", 'url_user' => "#{social_networks[3]}", 'exists' => "#{social_networks[4]}", 'http_status' => "#{social_networks[5]}", 'response_time_s' => "#{social_networks[6]}" }
+                create_event payload: social_networks
             end
-#          end
           else
             log "not equal"
             last_status = memory['last_status'].gsub("=>", ": ").gsub(": nil", ": null").gsub(", nil", ", null")
-            log "with gsub"
-            log last_status
             last_status = JSON.parse(last_status)
-            log "with parse"
-            log last_status
             payload.each do |social_networks|
               found = false
               if interpolated['debug'] == 'true'
                 log "#{found}"
               end
               last_status.each do |social_networksbis|
-                if social_networks[1] == social_networksbis[1] && social_networks[4] == social_networksbis[4]
+                if social_networks['name'] == social_networksbis['name'] && social_networks['exists'] == social_networksbis['exists']
                   found = true
                   if interpolated['debug'] == 'true'
                     log "#{found}"
-                    log social_networksbis[1]
+                    log social_networksbis
                   end
                 end
               end
               if found == false
-              create_event :payload => { 'username' => "#{social_networks[0]}", 'name' => "#{social_networks[1]}", 'url_main' => "#{social_networks[2]}", 'url_user' => "#{social_networks[3]}", 'exists' => "#{social_networks[4]}", 'http_status' => "#{social_networks[5]}", 'response_time_s' => "#{social_networks[6]}" }
+              create_event payload: social_networks
               end
             end
           end
