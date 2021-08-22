@@ -20,15 +20,16 @@ module Agents
 
     event_description <<-MD
       Events look like this:
-        {
-          "username": "XXXXXXXX",
-          "name": "2Dimensions",
-          "url_main": "https://2Dimensions.com/",
-          "url_user": "https://2Dimensions.com/a/XXXXXXXX",
-          "exists": "Available",
-          "http_status": "404",
-          "response_time_s": "1.3680214039050043"
-        }
+
+          {
+            "username": "XXXXXXXX",
+            "name": "2Dimensions",
+            "url_main": "https://2Dimensions.com/",
+            "url_user": "https://2Dimensions.com/a/XXXXXXXX",
+            "exists": "Available",
+            "http_status": "404",
+            "response_time_s": "1.3680214039050043"
+          }
     MD
 
     def default_options
