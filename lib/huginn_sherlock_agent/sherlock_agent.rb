@@ -111,12 +111,14 @@ module Agents
                   found = true
                   if interpolated['debug'] == 'true'
                     log "#{found}"
-                    log social_networksbis
+                    log "#{social_networks['name']} -> #{social_networks['exists']}"
                   end
                 end
               end
               if found == false
-              create_event payload: social_networks
+                if social_networks['exists'] == 'Available' || social_networks['exists'] == 'Claimed'
+                  create_event payload: social_networks
+                end
               end
             end
           end
